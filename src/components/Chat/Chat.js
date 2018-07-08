@@ -6,6 +6,8 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Message from '../Message/Message';
 import Paper from '@material-ui/core/Paper';
+import Send from '@material-ui/icons/Send';
+import TagFaces from '@material-ui/icons/TagFaces';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import VideoCall from '@material-ui/icons/VideoCall';
@@ -48,8 +50,15 @@ const styles = theme => ({
   chatFooter: {
     height: 60,
     background: '#eee',
-    padding: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2,
     boxSizing: 'border-box',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  textbox: {
+    flex: 1,
   },
 });
 
@@ -64,14 +73,18 @@ class Chat extends React.Component {
   }
 
   onKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      this.props.sendMessage({
-        type: 'chatMessage',
-        to: this.recipient,
-        message: e.target.value
-      });
+    if (e.key === 'Enter' && e.target.value !== '') {
+      this.sendMessage();
       return;
     }
+  }
+
+  sendMessage = () => {
+    this.props.sendMessage({
+      type: 'chatMessage',
+      to: this.recipient,
+      message: this.props.chat.message,
+    });
   }
 
   render() {
@@ -132,7 +145,16 @@ class Chat extends React.Component {
             onChange={this.onMessageChange}
             onKeyPress={this.onKeyPress}
             value={this.props.chat.message}
+            className={classes.textbox}
           />
+          <IconButton>
+            <TagFaces />
+          </IconButton>
+          <IconButton
+            onClick={this.sendMessage}
+          >
+            <Send />
+          </IconButton>
         </div>
       </Paper>
     );

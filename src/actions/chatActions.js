@@ -6,6 +6,7 @@ export const types = {
   LOAD_MESSAGES: 'LOAD_MESSAGES',
   LOADED_MESSAGES: 'LOADED_MESSAGES',
   SEND_MESSAGE: 'SEND_MESSAGE',
+  ACKNOWLEDGED_MESSAGE: 'ACKNOWLEDGED_MESSAGE',
 };
 
 export const messageChange = (message) => {
@@ -63,4 +64,19 @@ export const loadedMessages = (email, messages) => {
       messages,
     },
   };
+}
+
+export const acknowledgeMessage = (acknowledgedMessage) => {
+  return {
+    type: types.ACKNOWLEDGED_MESSAGE,
+    payload: acknowledgedMessage,
+  };
+}
+
+export const openVideoChat = () => {
+
+}
+
+export const closeVideoChat = () => {
+  
 }

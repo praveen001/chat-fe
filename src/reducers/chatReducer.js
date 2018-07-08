@@ -16,12 +16,6 @@ export default function chatReducer(state = initialState, action) {
         message: action.payload.message,
       };
 
-    // case types.ADD_MESSAGE:
-    //   return {
-    //     ...state,
-    //     messages: {}
-    //   };
-
     case types.LOADED_MESSAGES:
       return {
         ...state,
@@ -59,6 +53,24 @@ export default function chatReducer(state = initialState, action) {
           ...state.messages,
           [action.payload._id]: action.payload,
         }
+      };
+
+    case types.ACKNOWLEDGED_MESSAGE:
+      return {
+        ...state,
+        messages: {
+          ...state.messages,
+          [action.payload._id]: {
+            ...state.messages[action.payload._id],
+            received: true,
+          },
+        },
+      };
+
+    case types.SEND_MESSAGE:
+      return {
+        ...state,
+        message: '',
       };
 
     default:

@@ -79,7 +79,7 @@ class Login extends React.Component {
     var startApp = function () {
       gapi.load('auth2', function () {
         self.auth2 = gapi.auth2.init({
-          client_id: '151756860734-ukvqf7thjuo7h6os3lr7vefihjd7mda5.apps.googleusercontent.com',
+          client_id: '151756860734-q0d7uo2i53tceo05m314ddd14ogs0qo0.apps.googleusercontent.com',
           cookiepolicy: 'single_host_origin'
         });
         self.attachSignin(document.getElementById('customBtn'));
@@ -93,7 +93,7 @@ class Login extends React.Component {
     this.auth2.attachClickHandler(element, {}, (googleUser) => {
       let id_token = googleUser.getAuthResponse().id_token;
       this.props.loginGoogleUser(id_token);
-    });
+    }, console.log);
   }
 
   checkSignedInUser() {

@@ -15,7 +15,8 @@ module.exports = {
       disableDotRule: true
     },
     disableHostCheck: true,
-    hot: true, 
+    hot: true,
+    https: true,
   },
 
   output: {

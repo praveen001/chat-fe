@@ -10,6 +10,7 @@ import {
   types as chatActionTypes,
   receiveMessage,
   sentMessage,
+  acknowledgeMessage,
  } from '../actions/chatActions';
 
 var socket = {};
@@ -20,19 +21,23 @@ const socketMiddleware = store => next => action => {
       const state = store.getState();
 
       const token = state.user.user.token;
-      socket = io(`http://localhost:3000?token=${token}`);
+      socket = io(`https://localhost:3000?token=${token}`);
 
-      socket.on('onReceiveMessage', (data) => {
+      socket.on('onReceiveMessage', (data, acknowledge) => {
         if (state.contacts.contacts[data.from] === undefined) {
           store.dispatch(addNewContact(data.from));
         }
-        console.log('onreceivemessage', data);
         store.dispatch(receiveMessage(data));
+
+        acknowledge(); // Tell sender that we received the message
       });
 
       socket.on('onSentMessage', (data) => {
-        console.log('onsentmessage', data);
         store.dispatch(sentMessage(data));
+      });
+
+      socket.on('onAcknowledgement', (acknowledgedMessage) => {
+        store.dispatch(acknowledgeMessage(acknowledgedMessage));
       });
       break;
 

@@ -3,7 +3,7 @@ import axios from 'axios';
 import Store from './store';
 import { logout } from './actions/userActions';
 
-const baseURL = 'http://localhost:3000/';
+const baseURL = 'https://localhost:3000/';
 
 const instance = axios.create({
   baseURL,
