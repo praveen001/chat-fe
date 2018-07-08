@@ -14,7 +14,14 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/observable/dom/webSocket';
 
+import userEpics from './userEpics';
+import contactEpics from './contactEpics';
+import chatEpics from './chatEpics';
+
 const rootEpics = combineEpics(
+  userEpics,
+  contactEpics,
+  chatEpics,
 );
 
 export default rootEpics;

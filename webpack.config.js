@@ -11,9 +11,11 @@ module.exports = {
   devtool: 'inline-source-map',
 
   devServer: {
-    historyApiFallback: true,
+    historyApiFallback: {
+      disableDotRule: true
+    },
     disableHostCheck: true,
-    hot: true,
+    hot: true, 
   },
 
   output: {
@@ -31,7 +33,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['babel-preset-env', 'babel-preset-react']
+            presets: ['babel-preset-env', 'babel-preset-stage-2', 'babel-preset-react']
           }
         }
       }, {
@@ -40,6 +42,9 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           "css-loader"
         ]
+      }, {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loader: 'file-loader?name=./images/[name].[ext]'
       }
     ]
   },
