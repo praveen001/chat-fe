@@ -5,7 +5,12 @@ import {
 const initialState = {
   message: '',
   messages: {},
-  conversations: {}
+  conversations: {},
+  video: false,
+  incomingVideoCall: false,
+  incomingVideoCallFrom: '',
+  outgoingVideoCall: false,
+  outgoingVideoCallTo: '',
 };
 
 export default function chatReducer(state = initialState, action) {
@@ -71,6 +76,31 @@ export default function chatReducer(state = initialState, action) {
       return {
         ...state,
         message: '',
+      };
+
+    case types.OPEN_VIDEO_CHAT:
+      return {
+        ...state,
+        video: true,
+        videoChatRecipient: action.payload.to,
+      };
+
+    case types.CLOSE_VIDEO_CHAT:
+      return {
+        ...state,
+        video: false,
+      };
+
+    case types.SEND_VIDEO_REQUEST:
+      return {
+        ...state,
+        outgoingVideoCall: true,
+      };
+
+    case types.RECEIVE_VIDEO_REQUEST:
+      return {
+        ...state,
+        incomingVideoCall: true,
       };
 
     default:

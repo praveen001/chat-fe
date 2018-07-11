@@ -7,6 +7,10 @@ export const types = {
   LOADED_MESSAGES: 'LOADED_MESSAGES',
   SEND_MESSAGE: 'SEND_MESSAGE',
   ACKNOWLEDGED_MESSAGE: 'ACKNOWLEDGED_MESSAGE',
+  OPEN_VIDEO_CHAT: 'OPEN_VIDEO_CHAT',
+  CLOSE_VIDEO_CHAT: 'CLOSE_VIDEO_CHAT',
+  SEND_VIDEO_REQUEST: 'SEND_VIDEO_REQUEST',
+  RECEIVE_VIDEO_REQUEST: 'RECEIVE_VIDEO_REQUEST',
 };
 
 export const messageChange = (message) => {
@@ -73,10 +77,38 @@ export const acknowledgeMessage = (acknowledgedMessage) => {
   };
 }
 
-export const openVideoChat = () => {
-
+export const openVideoChat = (to) => {
+  return {
+    type: types.OPEN_VIDEO_CHAT,
+    payload: {
+      to,
+    },
+  };
 }
 
 export const closeVideoChat = () => {
-  
+  return {
+    type: types.CLOSE_VIDEO_CHAT,
+  };
+}
+
+// When I call someone
+export const sendVideoRequest = (to, description) => {
+  return {
+    type: types.SEND_VIDEO_REQUEST,
+    payload: {
+      to,
+      description,
+    },
+  };
+}
+
+// When I get a call from someone
+export const receiveVideoRequest = (data) => {
+  return {
+    type: types.RECEIVE_VIDEO_REQUEST,
+    payload: {
+      from: data.from,
+    },
+  };
 }

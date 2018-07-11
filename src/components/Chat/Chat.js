@@ -11,6 +11,7 @@ import TagFaces from '@material-ui/icons/TagFaces';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import VideoCall from '@material-ui/icons/VideoCall';
+import VideoChat from '../VideoChat/VideoChat';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -73,18 +74,24 @@ class Chat extends React.Component {
   }
 
   onKeyPress = (e) => {
-    if (e.key === 'Enter' && e.target.value !== '') {
+    if (e.key === 'Enter') {
       this.sendMessage();
-      return;
     }
   }
 
   sendMessage = () => {
+    if (!this.props.chat.message) {
+      return;
+    }
     this.props.sendMessage({
       type: 'chatMessage',
       to: this.recipient,
       message: this.props.chat.message,
     });
+  }
+
+  openVideoChat = () => {
+    this.props.openVideoChat(this.recipient);
   }
 
   render() {
@@ -115,8 +122,12 @@ class Chat extends React.Component {
             </Typography>
           </div>
           <div>
-            <IconButton>
-              <VideoCall />
+            <IconButton
+              onClick={this.openVideoChat}
+            >
+              <VideoCall
+                recipient={this.props.contact.email}
+              />
             </IconButton>
           </div>
         </div>

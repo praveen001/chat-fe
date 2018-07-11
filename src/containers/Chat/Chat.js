@@ -8,6 +8,8 @@ import {
   messageChange,
   loadMessages,
   sendMessage,
+  openVideoChat,
+  closeVideoChat,
 } from '../../actions/chatActions';
 
 function mapStateToProp(state, props) {
@@ -22,6 +24,8 @@ function mapDispatchToProp(dispatch) {
     sendMessage,
     messageChange,
     loadMessages,
+    openVideoChat,
+    closeVideoChat,
   }, dispatch);
 }
 

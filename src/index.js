@@ -7,6 +7,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import Chat from './containers/Chat/Chat';
 import Contacts from './containers/Contacts/Contacts';
 import Home from './layouts/Home/Home';
+import VideoChat from './containers/VideoChat/VideoChat';
 import Login from './containers/Login/Login';
 import store from './store';
 import styles from './index.css';
@@ -19,6 +20,7 @@ ReactDom.render(
       <Login>
         <Websocket>
           <Contacts>
+            <VideoChat />
             <BrowserRouter>
               <Switch>
                 <Route path='/chat/:email' component={Chat} />

@@ -11,6 +11,7 @@ import {
   receiveMessage,
   sentMessage,
   acknowledgeMessage,
+  receiveVideoRequest,
  } from '../actions/chatActions';
 
 var socket = {};
@@ -39,10 +40,18 @@ const socketMiddleware = store => next => action => {
       socket.on('onAcknowledgement', (acknowledgedMessage) => {
         store.dispatch(acknowledgeMessage(acknowledgedMessage));
       });
+
+      socket.on('receiveVideoRequest', (data) => {
+        store.dispatch(receiveVideoRequest(data));
+      });
       break;
 
     case chatActionTypes.SEND_MESSAGE:
       socket.emit(action.payload.message.type, action.payload.message);
+      break;
+
+    case chatActionTypes.SEND_VIDEO_REQUEST:
+      socket.emit('onSendVideoRequest', action.payload);
       break;
 
     default:
