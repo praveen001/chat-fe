@@ -22,9 +22,9 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use((response) => {
   return response;
 }, (err) => {
-  if (err.response.status === 403) {
-    Store.dispatch(logout());
-  }
+  // if (err.response.status === 403) {
+  //   Store.dispatch(logout());
+  // }
   return Promise.reject(err);
 });
 

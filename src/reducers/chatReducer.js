@@ -9,8 +9,12 @@ const initialState = {
   video: false,
   incomingVideoCall: false,
   incomingVideoCallFrom: '',
+  incomingDescription: '',
   outgoingVideoCall: false,
   outgoingVideoCallTo: '',
+  remoteDescription: undefined,
+  remoteIceCandidates: [],
+  localDescription: undefined,
 };
 
 export default function chatReducer(state = initialState, action) {
@@ -81,6 +85,7 @@ export default function chatReducer(state = initialState, action) {
     case types.OPEN_VIDEO_CHAT:
       return {
         ...state,
+        outgoingVideoCall: true,
         video: true,
         videoChatRecipient: action.payload.to,
       };
@@ -95,12 +100,35 @@ export default function chatReducer(state = initialState, action) {
       return {
         ...state,
         outgoingVideoCall: true,
+        outgoingVideoCallTo: action.payload.to,
+        localDescription: action.payload.description,
       };
 
     case types.RECEIVE_VIDEO_REQUEST:
       return {
         ...state,
+        video: true,
+        outgoingVideoCall: false,
         incomingVideoCall: true,
+        incomingVideoCallFrom: action.payload.from,
+        remoteDescription: action.payload.description,
+      };
+
+    case types.ACCEPTED_VIDEO_REQUEST:
+      return {
+        ...state,
+        remoteDescription: action.payload.description,
+      };
+
+    case types.RECEIVE_ICE_CANDIDATE:
+      if (!action.payload.candidate) {
+        return state;
+      }
+      const remoteIceCandidates = state.remoteIceCandidates.slice();
+      remoteIceCandidates.push(action.payload.candidate);
+      return {
+        ...state,
+        remoteIceCandidates,
       };
 
     default:

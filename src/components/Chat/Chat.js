@@ -11,7 +11,6 @@ import TagFaces from '@material-ui/icons/TagFaces';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import VideoCall from '@material-ui/icons/VideoCall';
-import VideoChat from '../VideoChat/VideoChat';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({

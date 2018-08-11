@@ -12,73 +12,100 @@ const styles = {
     background: '#000',
     zIndex: 10,
   },
+  video: {
+    height: '50%',
+    width: '100%',
+  }
 };
 
 class VideoChat extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    if (this.props.chat.video === false && nextProps.chat.video === true) {
-      this.getLocalStream();
+  componentDidMount() {
+    this.constraint = {
+      video: true,
+    };
+  }
 
-      if (this.props.chat.outgoingCall) {
-        this.makeCall();
-      } else {
-        // Incoming
-      }
+  componentDidUpdate(prevProps) {
+    if (!prevProps.chat.outgoingVideoCall && this.props.chat.outgoingVideoCall) {
+      this.makeCall();
+    }
+    if (!prevProps.chat.incomingVideoCall && this.props.chat.incomingVideoCall) {
+      this.receiveCall();
+    }
+    if (!prevProps.chat.remoteDescription && this.props.chat.remoteDescription) {
+      this.setRemoteDescription(this.props.chat.remoteDescription);
+    }
+    if (prevProps.chat.remoteIceCandidates.length !== this.props.chat.remoteIceCandidates.length) {
+      this.setRemoteIceCandidates(this.props.chat.remoteIceCandidates[this.props.chat.remoteIceCandidates.length - 1]);
     }
   }
 
-  getLocalStream = () => {
-    const self = this;
+  createConnection = () => {
+    return new RTCPeerConnection(null);
+  }
 
-    navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia);
-
-    navigator.getMedia(
-      // constraints
-      {
-        video: true,
-        audio: false
-      },
-
-      // success callback
-      function (mediaStream) {
-        self.localStream = mediaStream;
-        self.video1.srcObject = self.localStream;
-        self.video1.play();
-      },
-
-      //handle error
-      function (error) {
-        console.log(error);
-      }
-    );
+  getStream = () => {
+    return navigator.mediaDevices.getUserMedia(this.constraint);
   }
 
   makeCall = () => {
-    var servers = null;
+    this.peerConnection1 = this.createConnection();
 
-    this.peerConnection1 = new RTCPeerConnection(servers);
+    this.getStream().then((localStream) => {
+      this.video1.srcObject = localStream;
+      return this.peerConnection1.addStream(localStream);
+    }).then(() => {
+      return this.peerConnection1.createOffer();
+    }).then((offer) => {
+      return this.peerConnection1.setLocalDescription(offer);
+    }).then(() => {
+      this.props.sendVideoRequest(this.props.chat.videoChatRecipient, this.peerConnection1.localDescription);
+    });;
 
-    // Add Video Stream
-    this.peerConnection1.addStream(this.localStream);
-
-    this.peerConnection1.onicecandidate = (e) => {
-      this.onIceCandidate(this.peerConnection1, e);
-    };
-
-    // Once remote stream arrives put it on video
-    this.peerConnection1.onaddstream = (event) => {
-      this.video2.srcObject = event.stream;
-    };
-
-    // Create offer
-    console.log('creating offer');
-    this.peerConnection1.createOffer((desc) => {
-      this.props.sendVideoRequest(this.props.recipient, desc);
-    });
+    this.peerConnection1.onicecandidate = this.onIceCandidate;
+    this.peerConnection1.onaddstream = this.onAddStream;
   }
 
-  onIceCandidate = (peerConnection, event) => {
-    console.log('icecandidate', peerConnection, event);
+  receiveCall = () => {
+    const remoteDescription = new RTCSessionDescription(this.props.chat.remoteDescription);
+    this.peerConnection1 = this.createConnection();
+
+    this.peerConnection1.setRemoteDescription(remoteDescription).then(() => {
+      return this.getStream();
+    }).then((localStream) => {
+      this.video1.srcObject = localStream;
+      return this.peerConnection1.addStream(localStream);
+    }).then(() => {
+      return this.peerConnection1.createAnswer();
+    }).then((answer) => {
+      return this.peerConnection1.setLocalDescription(answer);
+    }).then(() => {
+      this.props.acceptVideoRequest(this.props.chat.incomingVideoCallFrom, this.peerConnection1.localDescription)
+    });
+
+    this.peerConnection1.onicecandidate = this.onIceCandidate;
+    this.peerConnection1.onaddstream = this.onAddStream;
+  }
+
+  onIceCandidate = (event) => {
+    // Send ice candidates to other user
+    let recipient = this.props.chat.incomingVideoCallFrom;
+    if (this.props.chat.outgoingVideoCall) {
+      recipient = this.props.chat.outgoingVideoCallTo;
+    }
+    this.props.iceCandidateExchange(recipient, event.candidate);
+  }
+
+  onAddStream = (event) => {
+    this.video2.srcObject = event.stream;
+  };
+
+  setRemoteDescription = (description) => {
+    this.peerConnection1.setRemoteDescription(description).then(() => console.log('set remote desc'));
+  }
+
+  setRemoteIceCandidates = (candidate) => {
+    this.peerConnection1.addIceCandidate(candidate);
   }
 
   render() {
@@ -93,8 +120,8 @@ class VideoChat extends React.Component {
         className={classes.videoChatWrap}
       >
         Video Chat
-        <video ref={elem => this.video1 = elem}></video>
-        <video ref={elem => this.video2 = elem}></video>
+        <video className={classes.video} ref={elem => this.video1 = elem} autoPlay></video>
+        <video className={classes.video} ref={elem => this.video2 = elem} autoPlay></video>
         <button onClick={this.props.closeVideoChat}>Close</button>
       </div>
     );

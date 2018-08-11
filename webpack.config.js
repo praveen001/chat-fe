@@ -1,4 +1,5 @@
-const path = require('path'),
+const path = require('path')
+  fs = require('fs'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   MiniCssExtractPlugin = require("mini-css-extract-plugin"),
   webpack = require('webpack');
@@ -16,7 +17,10 @@ module.exports = {
     },
     disableHostCheck: true,
     hot: true,
-    https: true,
+    https: {
+      key: fs.readFileSync('/home/praveen/ssl/privatekey.key'),
+      cert: fs.readFileSync('/home/praveen/ssl/certificate.crt'),
+    },
   },
 
   output: {

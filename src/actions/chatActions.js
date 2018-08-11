@@ -11,6 +11,10 @@ export const types = {
   CLOSE_VIDEO_CHAT: 'CLOSE_VIDEO_CHAT',
   SEND_VIDEO_REQUEST: 'SEND_VIDEO_REQUEST',
   RECEIVE_VIDEO_REQUEST: 'RECEIVE_VIDEO_REQUEST',
+  ACCEPT_VIDEO_REQUEST: 'ACCEPT_VIDEO_REQUEST',
+  ACCEPTED_VIDEO_REQUEST: 'ACCEPTED_VIDEO_REQUEST',
+  ICE_CANDIDATE_EXCHANGE: 'ICE_CANDIDATE_EXCHANGE',
+  RECEIVE_ICE_CANDIDATE: 'RECEIVE_ICE_CANDIDIATE',
 };
 
 export const messageChange = (message) => {
@@ -109,6 +113,47 @@ export const receiveVideoRequest = (data) => {
     type: types.RECEIVE_VIDEO_REQUEST,
     payload: {
       from: data.from,
+      description: data.description,
+    },
+  };
+}
+
+export const acceptVideoRequest = (to, description) => {
+  return {
+    type: types.ACCEPT_VIDEO_REQUEST,
+    payload: {
+      to,
+      description,
+    }
+  }
+}
+
+export const acceptedVideoRequest = (data) => {
+  return {
+    type: types.ACCEPTED_VIDEO_REQUEST,
+    payload: {
+      from: data.from,
+      description: data.description,
+    },
+  }
+}
+
+export const iceCandidateExchange = (to, candidate) => {
+  return {
+    type: types.ICE_CANDIDATE_EXCHANGE,
+    payload: {
+      to,
+      candidate,
+    },
+  };
+}
+
+export const receiveIceCandidate = (data) => {
+  return {
+    type: types.RECEIVE_ICE_CANDIDATE,
+    payload: {
+      from: data.from,
+      candidate: data.candidate,
     },
   };
 }

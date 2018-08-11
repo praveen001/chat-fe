@@ -8,6 +8,8 @@ import VideoChat from '../../components/VideoChat/VideoChat';
 import {
   sendVideoRequest,
   closeVideoChat,
+  acceptVideoRequest,
+  iceCandidateExchange,
 } from '../../actions/chatActions';
 
 function mapStateToProp(state) {
@@ -20,6 +22,8 @@ function mapDispatchToProp(dispatch) {
   return bindActionCreators({
     sendVideoRequest,
     closeVideoChat,
+    acceptVideoRequest,
+    iceCandidateExchange,
   }, dispatch);
 }
 

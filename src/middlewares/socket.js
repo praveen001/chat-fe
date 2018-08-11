@@ -12,6 +12,8 @@ import {
   sentMessage,
   acknowledgeMessage,
   receiveVideoRequest,
+  acceptedVideoRequest,
+  receiveIceCandidate,
  } from '../actions/chatActions';
 
 var socket = {};
@@ -42,17 +44,37 @@ const socketMiddleware = store => next => action => {
       });
 
       socket.on('receiveVideoRequest', (data) => {
+        console.log('receiving call');
         store.dispatch(receiveVideoRequest(data));
       });
+
+      socket.on('acceptVideoRequest', (data) => {
+        store.dispatch(acceptedVideoRequest(data));
+      });
+
+      socket.on('iceCandidateExchange', (data) => {
+        store.dispatch(receiveIceCandidate(data));
+      });
+
       break;
 
     case chatActionTypes.SEND_MESSAGE:
       socket.emit(action.payload.message.type, action.payload.message);
       break;
 
+      case chatActionTypes.SEND_VIDEO_REQUEST:
+      socket.emit('onSendVideoRequest', action.payload);
+      break;
+
     case chatActionTypes.SEND_VIDEO_REQUEST:
       socket.emit('onSendVideoRequest', action.payload);
       break;
+
+    case chatActionTypes.ACCEPT_VIDEO_REQUEST:
+      socket.emit('onAcceptVideoRequest', action.payload);
+
+    case chatActionTypes.ICE_CANDIDATE_EXCHANGE:
+      socket.emit('iceCandidateExchange', action.payload);
 
     default:
       break;

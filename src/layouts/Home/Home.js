@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AddContact from '../../containers/AddContact/AddContact';
 import ContactList from '../../containers/ContactList/ContactList';
 import Header from '../../containers/Header/Header';
+import VideoChat from '../../containers/VideoChat/VideoChat';
 
 const styles = {
   conversationsWrap: {
@@ -30,6 +31,7 @@ class Home extends React.Component {
         <Header />
         <ContactList />
         <AddContact />
+        <VideoChat />
       </Paper>
     );
   }
